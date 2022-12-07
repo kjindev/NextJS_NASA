@@ -13,6 +13,7 @@ export default function Today() {
       .then((result) => setTodayData(result));
   }, []);
 
+  console.log("testing");
   return (
     <div className="px-[50px] pt-[60px]">
       <Seo title="Today" />
