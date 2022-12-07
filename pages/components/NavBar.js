@@ -25,11 +25,7 @@ export default function NavBar({ handleScrollView }) {
   }
 
   return (
-    <div
-      className={`${
-        yAxis < 500 ? "" : "bg-black"
-      } text-white flex justify-between items-center z-20 w-[100%] h-[70px] fixed px-[30px] pt-[5px]`}
-    >
+    <div className="bg-black text-white flex justify-between items-center z-20 w-[100%] h-[70px] fixed px-[30px] pt-[5px]">
       <div id="mainLogo" className="text-[27px] pt-[5px]">
         <Link href="/">Our Universe</Link>
       </div>
@@ -64,6 +60,14 @@ export default function NavBar({ handleScrollView }) {
             }`}
           >
             Search Things
+          </span>
+          <span
+            onClick={handleScrollView}
+            className={`${
+              2500 > yAxis && yAxis >= 2000 ? navStyleChange : navStyleDefault
+            }`}
+          >
+            Information
           </span>
         </div>
       ) : (

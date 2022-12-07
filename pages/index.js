@@ -22,6 +22,7 @@ export default function Home() {
       "Astronomy Picture of the Day": 1,
       "Imagery of the Earth": 2,
       "Search Things": 3,
+      Information: 4,
     };
     scrollRef.current[category[name]].scrollIntoView({ behavior: "smooth" });
   };
@@ -67,7 +68,7 @@ export default function Home() {
       <div className="relative">
         <div className={textStyle}>
           <h1>Search What You Want</h1>
-          <Link className="hover:text-indigo-300" href="/Mars">
+          <Link className="hover:text-indigo-300" href="/Search">
             View More
           </Link>
         </div>
@@ -76,7 +77,7 @@ export default function Home() {
         </div>
       </div>
       <div className="relative">
-        <h1 className={textStyle}>NASA</h1>
+        <h1 className={textStyle}>Information</h1>
         <div ref={(el) => (scrollRef.current[4] = el)}>
           <Image src={universe3} alt="img1" quality={100} placeholder="blur" />
         </div>
