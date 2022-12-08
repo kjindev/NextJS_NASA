@@ -6,17 +6,10 @@ import universe3 from "../image/universe03.jpg";
 import { useRef } from "react";
 
 export default function Home() {
-  /*fetch("https://images-api.nasa.gov/search?q={q}")
-    .then((response) => response.json())
-    .then((data) => console.log(data));
-*/
-
-  //const NavName = ["a", "b", "c", "d"];
   const scrollRef = useRef([]);
 
   const handleScrollView = (event) => {
     const name = event.target.innerText;
-    console.log(name);
     const category = {
       Home: 0,
       "Astronomy Picture of the Day": 1,

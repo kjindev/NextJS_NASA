@@ -15,6 +15,7 @@ module.exports = {
       "mars.jpl.nasa.gov",
       "epic.gsfc.nasa.gov",
       "www.youtube.com",
+      "images-assets.nasa.gov",
     ],
   },
 };

@@ -1,19 +1,19 @@
 import { useEffect, useState } from "react";
 import Seo from "./components/Seo";
+import Image from "next/image";
 
 export default function Search() {
-  const [year, setYear] = useState([2011, 2012]);
+  const [year, setYear] = useState([2011, 2011]);
   const yearOption = [];
+  const imgOption = [];
   const [searchData, setSearchData] = useState(null);
+  const [imageVisible, setImageVisible] = useState(false);
+
   fetch(
     `https://images-api.nasa.gov/search?media_type=image&year_start=${year[0]}&year_end=${year[1]}`
   )
     .then((response) => response.json())
     .then((data) => setSearchData(data));
-
-  useEffect(() => {
-    console.log(searchData);
-  }, [year]);
 
   for (let i = 0; i < 12; i++) {
     yearOption.push(2011 + i);
@@ -27,21 +27,26 @@ export default function Search() {
   const handleClick = (event) => {
     if (event.target.name === "startYear") {
       year[0] = event.target.value;
-      console.log("start", year[0]);
     } else if (event.target.name === "endYear") {
       year[1] = event.target.value;
-      console.log("end", year[1]);
     }
   };
 
   const handleButton = () => {
     if (year[0] > year[1]) {
       alert("The end year should be equal or larger than the start year :(");
+      setImageVisible(false);
     } else {
-      console.log("button");
-      console.log(searchData);
+      setImageVisible(true);
+      if (searchData !== null) {
+        for (let i = 0; i < 5; i++) {
+          imgOption.push(searchData.collection.items[i].links[0].href);
+        }
+      }
+      console.log(imgOption);
     }
   };
+
   return (
     <div>
       <Seo title="Search" />
@@ -51,23 +56,33 @@ export default function Search() {
         </form>
         <div>
           <span>start year</span>
-          <select className=" text-black">
+          <select
+            onChange={handleClick}
+            name="startYear"
+            className=" text-black"
+          >
             {yearOption.map((item, index) => (
-              <option onClick={handleClick} name="startYear" key={index}>
-                {yearOption[index]}
-              </option>
+              <option key={index}>{yearOption[index]}</option>
             ))}
           </select>
           <span>end year</span>
-          <select className=" text-black">
+          <select onChange={handleClick} name="endYear" className=" text-black">
             {yearOption.map((item, index) => (
-              <option onClick={handleClick} name="endYear" key={index}>
-                {yearOption[index]}
-              </option>
+              <option key={index}>{yearOption[index]}</option>
             ))}
           </select>
           <button onClick={handleButton}>검색</button>
         </div>
+        {searchData && (
+          <div>
+            <Image
+              src={searchData.collection.items[0].links[0].href}
+              alt="image"
+              width={500}
+              height={500}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
