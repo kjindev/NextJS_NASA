@@ -2,7 +2,7 @@ import Image from "next/image";
 import Seo from "./components/Seo";
 import NavBar from "./components/NavBar";
 import Link from "next/link";
-import universe3 from "../image/universe03.jpg";
+import universe3 from "../public/image/universe03.jpg";
 import { useRef } from "react";
 
 export default function Home() {
