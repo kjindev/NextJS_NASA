@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import Seo from "./components/Seo";
 import Image from "next/image";
-import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 export default function Search() {
   const [startYear, setStartYear] = useState(2011);
@@ -10,12 +9,42 @@ export default function Search() {
     2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,
   ];
   const [nasaData, setNasaData] = useState();
-  const [imageCount, setImageCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
   const [datacheck, setDatacheck] = useState();
-  const [page, setPage] = useState(1);
   const [arr, setArr] = useState([]);
+
+  const [page, setPage] = useState(1);
+  const [infinityScroll, setInfinityScroll] = useState(false);
+  const [isWindow, setIsWindow] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      setIsWindow(true);
+    }
+  }, [isWindow]);
+
+  const handleScroll = () => {
+    if (
+      window.pageYOffset + window.innerHeight >=
+      document.documentElement.scrollHeight
+    ) {
+      setInfinityScroll(true);
+      setPage(page + 1);
+      console.log(page);
+    }
+  };
+
+  if (isWindow) {
+    window.addEventListener("scroll", handleScroll);
+  }
+
+  if (infinityScroll) {
+    console.log("hello");
+    for (let i = 12 * page; i < 12 * (page + 1); i++) {
+      arr.push(nasaData[i]);
+    }
+  }
 
   useEffect(() => {
     async function getData() {
@@ -24,22 +53,16 @@ export default function Search() {
       );
       const result = await response.json();
       setNasaData(result.collection.items);
-      setImageCount(result.collection.metadata.total_hits);
       setDatacheck(result);
       setIsLoading(false);
     }
     getData();
-  }, [startYear, endYear, page]);
-
-  if (imageCount !== null) {
-    let limit = 12;
-    let totalPage = Math.ceil(imageCount / limit);
-  }
+  }, [startYear, endYear]);
 
   const handleButton = (event) => {
     event.preventDefault();
     setImageVisible(true);
-    for (let i = 12 * (page - 1); i < 12 * page; i++) {
+    for (let i = 0; i < 12; i++) {
       arr.push(nasaData[i]);
     }
   };
@@ -92,19 +115,6 @@ export default function Search() {
               ))}
             </div>
           )}
-          <div className="flex justify-center text-[20px] mb-[25px]">
-            <FiChevronLeft
-              onClick={() => setPage(page - 1)}
-              size={30}
-              className="mx-[20px] cursor-pointer"
-            />
-            <div>{page}</div>
-            <FiChevronRight
-              onClick={() => setPage(page + 1)}
-              size={30}
-              className="mx-[20px] cursor-pointer"
-            />
-          </div>
         </div>
       )}
     </div>
