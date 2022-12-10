@@ -1,26 +1,21 @@
 import { useEffect, useState } from "react";
 import Seo from "./components/Seo";
 import Image from "next/image";
+import { FiChevronLeft, FiChevronRight } from "react-icons/fi";
 
 export default function Search() {
-  let startYear = 2011;
-  let endYear = 2011;
+  const [startYear, setStartYear] = useState(2011);
+  const [endYear, setEndYear] = useState(2011);
   const yearOption = [
     2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,
   ];
   const [nasaData, setNasaData] = useState();
+  const [imageCount, setImageCount] = useState();
   const [isLoading, setIsLoading] = useState(false);
   const [imageVisible, setImageVisible] = useState(false);
   const [datacheck, setDatacheck] = useState();
-  const [yearChange, setYearChange] = useState(true);
-  /*const getData = async () => {
-    const response = await fetch(
-      `https://images-api.nasa.gov/search?media_type=image&year_start=${startYear}&year_end=${endYear}`
-    );
-    const result = await response.json();
-    setNasaData(result.collection.items);
-    setDatacheck(result.collection);
-  };*/
+  const [page, setPage] = useState(1);
+  const [arr, setArr] = useState([]);
 
   useEffect(() => {
     async function getData() {
@@ -29,39 +24,23 @@ export default function Search() {
       );
       const result = await response.json();
       setNasaData(result.collection.items);
+      setImageCount(result.collection.metadata.total_hits);
+      setDatacheck(result);
       setIsLoading(false);
-      setDatacheck(result.collection);
     }
     getData();
-  }, [yearChange]);
+  }, [startYear, endYear, page]);
 
-  useEffect(() => {
-    console.log("year change");
-  }, [startYear]);
+  if (imageCount !== null) {
+    let limit = 12;
+    let totalPage = Math.ceil(imageCount / limit);
+  }
 
-  const handleInput = (event) => {
+  const handleButton = (event) => {
     event.preventDefault();
-    console.log("submit");
-  };
-
-  const handleClick = (event) => {
-    if (event.target.name === "startYear") {
-      console.log(event.target.children);
-      startYear = parseInt(event.target.value);
-      console.log("start", startYear);
-    } else if (event.target.name === "endYear") {
-      endYear = parseInt(event.target.value);
-      console.log("end", endYear);
-    }
-  };
-
-  const handleButton = () => {
-    setYearChange(!yearChange);
-    if (startYear > endYear) {
-      alert("The end year should be equal or larger than the start year :(");
-    } else {
-      // setImageVisible(true);
-      console.log(datacheck);
+    setImageVisible(true);
+    for (let i = 12 * (page - 1); i < 12 * page; i++) {
+      arr.push(nasaData[i]);
     }
   };
 
@@ -72,12 +51,13 @@ export default function Search() {
         <h1>Loading...</h1>
       ) : (
         <div>
-          <form onSubmit={handleInput}>
-            <input className="text-black text-center" placeholder="text" />
-          </form>
-          <div onClick={handleClick}>
+          <div className="flex flex-row justify-center m-[20px]">
             <span>start year</span>
-            <select name="startYear" className=" text-black">
+            <select
+              onChange={(event) => setStartYear(event.target.value)}
+              name="startYear"
+              className=" text-black"
+            >
               {yearOption.map((item, index) => (
                 <option key={index} value={item}>
                   {item}
@@ -85,7 +65,11 @@ export default function Search() {
               ))}
             </select>
             <span>end year</span>
-            <select name="endYear" className=" text-black">
+            <select
+              onChange={(event) => setEndYear(event.target.value)}
+              name="endYear"
+              className=" text-black"
+            >
               {yearOption.map((item, index) => (
                 <option key={index} value={item}>
                   {item}
@@ -94,20 +78,33 @@ export default function Search() {
             </select>
             <button onClick={handleButton}>검색</button>
           </div>
-          {/*imageVisible && (
-            <div>
-              {nasaData.map((item) => (
-                <div key={item.data[0].nasa_id}>
+          {imageVisible && (
+            <div className="flex flex-row justify-center flex-wrap">
+              {arr.map((item) => (
+                <div className="p-[10px]" key={item.data[0].nasa_id}>
                   <Image
                     src={item.links[0].href}
                     alt="img"
-                    width={500}
+                    width={450}
                     height={500}
                   />
                 </div>
               ))}
             </div>
-              )*/}
+          )}
+          <div className="flex justify-center text-[20px] mb-[25px]">
+            <FiChevronLeft
+              onClick={() => setPage(page - 1)}
+              size={30}
+              className="mx-[20px] cursor-pointer"
+            />
+            <div>{page}</div>
+            <FiChevronRight
+              onClick={() => setPage(page + 1)}
+              size={30}
+              className="mx-[20px] cursor-pointer"
+            />
+          </div>
         </div>
       )}
     </div>
