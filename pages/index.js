@@ -27,9 +27,6 @@ export default function Home() {
     <div>
       <Seo title="Home" />
       <NavBar handleScrollView={handleScrollView} />
-      {/*NavName.map((data, index) => (
-        <div>{NavName[index]}</div>
-      ))*/}
       <div className="relative">
         <h1 className={textStyle}>Welcome!</h1>
         <div ref={(el) => (scrollRef.current[0] = el)}>

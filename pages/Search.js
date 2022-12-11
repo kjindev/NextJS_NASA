@@ -8,15 +8,31 @@ export default function Search() {
   const yearOption = [
     2011, 2012, 2013, 2014, 2015, 2016, 2017, 2018, 2019, 2020, 2021, 2022,
   ];
-  const [nasaData, setNasaData] = useState();
-  const [isLoading, setIsLoading] = useState(false);
+  const [nasaData, setNasaData] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [imageVisible, setImageVisible] = useState(false);
-  const [datacheck, setDatacheck] = useState();
-  const [arr, setArr] = useState([]);
+  const [imageArr, setImageArr] = useState([]);
 
+  const [isWindow, setIsWindow] = useState(false);
   const [page, setPage] = useState(1);
   const [infinityScroll, setInfinityScroll] = useState(false);
-  const [isWindow, setIsWindow] = useState(false);
+
+  useEffect(() => {
+    async function getData() {
+      const response = await fetch(
+        `https://images-api.nasa.gov/search?media_type=image&year_start=${startYear}&year_end=${endYear}`
+      );
+      const result = await response.json();
+      setNasaData(result.collection.items);
+    }
+    getData();
+  }, [startYear, endYear]);
+
+  useEffect(() => {
+    if (nasaData !== null) {
+      setIsLoading(false);
+    }
+  }, [nasaData]);
 
   useEffect(() => {
     if (typeof window !== undefined) {
@@ -31,7 +47,6 @@ export default function Search() {
     ) {
       setInfinityScroll(true);
       setPage(page + 1);
-      console.log(page);
     }
   };
 
@@ -40,31 +55,20 @@ export default function Search() {
   }
 
   if (infinityScroll) {
-    console.log("hello");
-    for (let i = 12 * page; i < 12 * (page + 1); i++) {
-      arr.push(nasaData[i]);
+    if (page < 8) {
+      for (let i = 12 * page; i < 12 * (page + 1); i++) {
+        imageArr.push(nasaData[i]);
+      }
     }
   }
-
-  useEffect(() => {
-    async function getData() {
-      const response = await fetch(
-        `https://images-api.nasa.gov/search?media_type=image&year_start=${startYear}&year_end=${endYear}`
-      );
-      const result = await response.json();
-      setNasaData(result.collection.items);
-      setDatacheck(result);
-      setIsLoading(false);
-    }
-    getData();
-  }, [startYear, endYear]);
 
   const handleButton = (event) => {
     event.preventDefault();
     setImageVisible(true);
     for (let i = 0; i < 12; i++) {
-      arr.push(nasaData[i]);
+      imageArr.push(nasaData[i]);
     }
+    console.log(nasaData);
   };
 
   return (
@@ -103,12 +107,12 @@ export default function Search() {
           </div>
           {imageVisible && (
             <div className="flex flex-row justify-center flex-wrap">
-              {arr.map((item) => (
-                <div className="p-[10px]" key={item.data[0].nasa_id}>
+              {imageArr.map((item) => (
+                <div key={item.data[0].nasa_id}>
                   <Image
                     src={item.links[0].href}
                     alt="img"
-                    width={450}
+                    width={500}
                     height={500}
                   />
                 </div>
