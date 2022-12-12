@@ -48,14 +48,6 @@ export default function NavBar({ handleScrollView }) {
           <span
             onClick={handleScrollView}
             className={`${
-              1500 > yAxis && yAxis >= 1000 ? navStyleChange : navStyleDefault
-            }`}
-          >
-            Imagery of the Earth
-          </span>
-          <span
-            onClick={handleScrollView}
-            className={`${
               2000 > yAxis && yAxis >= 1500 ? navStyleChange : navStyleDefault
             }`}
           >

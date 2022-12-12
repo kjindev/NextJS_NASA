@@ -16,6 +16,7 @@ export default function Search() {
   const [isWindow, setIsWindow] = useState(false);
   const [page, setPage] = useState(1);
   const [infinityScroll, setInfinityScroll] = useState(false);
+  const [testData, setTestDate] = useState();
 
   useEffect(() => {
     async function getData() {
@@ -24,6 +25,7 @@ export default function Search() {
       );
       const result = await response.json();
       setNasaData(result.collection.items);
+      setTestDate(result.collection);
     }
     getData();
   }, [startYear, endYear]);
@@ -106,10 +108,17 @@ export default function Search() {
             <button onClick={handleButton}>검색</button>
           </div>
           {imageVisible && (
-            <div className="flex flex-row justify-center flex-wrap">
+            <div className="flex  justify-center flex-wrap">
               {imageArr.map((item) => (
-                <div key={item.data[0].nasa_id}>
+                <div
+                  className="flex justify-center w-[20%] m-[10px] rounded-[15px] tooltip hover:cursor-pointer"
+                  key={item.data[0].nasa_id}
+                >
+                  <div className="tooltiptext m-[5px]">
+                    {item.data[0].title}
+                  </div>
                   <Image
+                    className="h-[300px] top-[50%] left-[50%] p-[5px] bg-white object-cover rounded-[20px]"
                     src={item.links[0].href}
                     alt="img"
                     width={500}

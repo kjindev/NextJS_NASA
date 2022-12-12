@@ -21,6 +21,29 @@ body {
   color: white;
   background-color: black;
 }
+
 #mainLogo {
   font-family: "establishRetrosansOTF";
+}
+
+.tooltip {
+  position: relative;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  position: absolute;
+  width: auto;
+  text-align: center;
+  color: #fff;
+  top: 50%;
+  transform: translateX(-50%);
+  transform: translateY(-50%);
+  z-index: 5;
+  background-color: black;
+  padding: 5px 10px;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

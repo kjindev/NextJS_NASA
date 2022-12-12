@@ -13,9 +13,8 @@ export default function Home() {
     const category = {
       Home: 0,
       "Astronomy Picture of the Day": 1,
-      "Imagery of the Earth": 2,
-      "Search Things": 3,
-      Information: 4,
+      "Search Things": 2,
+      Information: 3,
     };
     scrollRef.current[category[name]].scrollIntoView({ behavior: "smooth" });
   };
@@ -44,10 +43,11 @@ export default function Home() {
           <Image src={universe3} alt="img1" quality={100} placeholder="blur" />
         </div>
       </div>
+
       <div className="relative">
         <div className={textStyle}>
-          <h1>Earth Picture</h1>
-          <Link className="hover:text-indigo-300" href="/Earth">
+          <h1>Search What You Want</h1>
+          <Link className="hover:text-indigo-300" href="/Search">
             View More
           </Link>
         </div>
@@ -56,19 +56,8 @@ export default function Home() {
         </div>
       </div>
       <div className="relative">
-        <div className={textStyle}>
-          <h1>Search What You Want</h1>
-          <Link className="hover:text-indigo-300" href="/Search">
-            View More
-          </Link>
-        </div>
-        <div ref={(el) => (scrollRef.current[3] = el)}>
-          <Image src={universe3} alt="img1" quality={100} placeholder="blur" />
-        </div>
-      </div>
-      <div className="relative">
         <h1 className={textStyle}>Information</h1>
-        <div ref={(el) => (scrollRef.current[4] = el)}>
+        <div ref={(el) => (scrollRef.current[3] = el)}>
           <Image src={universe3} alt="img1" quality={100} placeholder="blur" />
         </div>
       </div>
