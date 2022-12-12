@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
-import Seo from "./components/Seo";
+import Seo from "../components/Seo";
 import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Search() {
   const [startYear, setStartYear] = useState(2011);
@@ -11,12 +13,28 @@ export default function Search() {
   const [nasaData, setNasaData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [imageVisible, setImageVisible] = useState(false);
-  const [imageArr, setImageArr] = useState([]);
+  const [dataArr, setDataArr] = useState([]);
 
   const [isWindow, setIsWindow] = useState(false);
   const [page, setPage] = useState(1);
   const [infinityScroll, setInfinityScroll] = useState(false);
-  const [testData, setTestDate] = useState();
+
+  const router = useRouter();
+
+  const handleClick = (id, title, date, description, image) => {
+    router.push(
+      {
+        pathname: `/Search/${id}`,
+        query: {
+          title,
+          date,
+          description,
+          image,
+        },
+      },
+      `/Search/${id}`
+    );
+  };
 
   useEffect(() => {
     async function getData() {
@@ -25,7 +43,6 @@ export default function Search() {
       );
       const result = await response.json();
       setNasaData(result.collection.items);
-      setTestDate(result.collection);
     }
     getData();
   }, [startYear, endYear]);
@@ -59,7 +76,7 @@ export default function Search() {
   if (infinityScroll) {
     if (page < 8) {
       for (let i = 12 * page; i < 12 * (page + 1); i++) {
-        imageArr.push(nasaData[i]);
+        dataArr.push(nasaData[i]);
       }
     }
   }
@@ -68,7 +85,7 @@ export default function Search() {
     event.preventDefault();
     setImageVisible(true);
     for (let i = 0; i < 12; i++) {
-      imageArr.push(nasaData[i]);
+      dataArr.push(nasaData[i]);
     }
     console.log(nasaData);
   };
@@ -108,17 +125,39 @@ export default function Search() {
             <button onClick={handleButton}>검색</button>
           </div>
           {imageVisible && (
-            <div className="flex  justify-center flex-wrap">
-              {imageArr.map((item) => (
+            <div className="flex flex-wrap justify-center">
+              {dataArr.map((item) => (
                 <div
-                  className="flex justify-center w-[20%] m-[10px] rounded-[15px] tooltip hover:cursor-pointer"
+                  onClick={() =>
+                    handleClick(
+                      item.data[0].nasa_id,
+                      item.data[0].title,
+                      item.data[0].date_created,
+                      item.data[0].description,
+                      item.links[0].href
+                    )
+                  }
+                  className="tooltip flex justify-center w-[20%] m-[10px] rounded-[15px] hover:cursor-pointer "
                   key={item.data[0].nasa_id}
                 >
-                  <div className="tooltiptext m-[5px]">
+                  <Link
+                    className="tooltiptext m-[5px]"
+                    key={item.data[0].nasa_id}
+                    href={{
+                      pathname: `/Search/${item.data[0].nasa_id}`,
+                      query: {
+                        title: item.data[0].title,
+                        date: item.data[0].date_created,
+                        description: item.data[0].description,
+                        image: item.links[0].href,
+                      },
+                    }}
+                    as={`/Search/${item.data[0].nasa_id}`}
+                  >
                     {item.data[0].title}
-                  </div>
+                  </Link>
                   <Image
-                    className="h-[300px] top-[50%] left-[50%] p-[5px] bg-white object-cover rounded-[20px]"
+                    className="h-[300px] top-[50%] left-[50%] p-[5px] rounded-[20px] bg-white object-cover"
                     src={item.links[0].href}
                     alt="img"
                     width={500}

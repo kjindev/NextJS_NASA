@@ -24,6 +24,7 @@ export default function NavBar({ handleScrollView }) {
     window.addEventListener("scroll", handleScroll);
   }
 
+  console.log(router);
   return (
     <div className="bg-black text-white flex justify-between items-center z-20 w-[100%] h-[70px] fixed px-[30px] pt-[5px]">
       <div id="mainLogo" className="text-[27px] pt-[5px]">
