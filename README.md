@@ -1,1 +1,1 @@
-# Next.js Project
+Next.js의 기본적인 내용을 학습하기 위해 제작된 프로젝트입니다.
